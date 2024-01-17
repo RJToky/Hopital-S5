@@ -51,4 +51,11 @@ public class Symptome {
         return query.getResultList();
     }
 
+    public static Symptome getById(EntityManager entityManager, int id) {
+        String sql = "select * from symptomes where id = :id";
+        Query query = entityManager.createNativeQuery(sql, Symptome.class);
+        query.setParameter("id", id);
+        return (Symptome) query.getSingleResult();
+    }
+
 }

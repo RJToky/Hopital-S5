@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/layout-app}"
+>
+  <body>
+    <section layout:fragment="content">
+      <h1 class="mb-5">Resultat</h1>
+
+      <div class="mb-5 row">
+        <h4 class="text-secondary">Informations entrées</h4>
+        <p class="fw-medium" th:text="${'Age : ' + age + ' ans'}"></p>
+        <div class="table-responsive col-md-8">
+          <table class="table">
+            <thead class="table-secondary">
+              <tr>
+                <th>ID</th>
+                <th>Nom du symptome</th>
+                <th class="text-end pe-5">Effet</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="symptome : ${symptomes}">
+                <td th:text="${symptome.id}"></td>
+                <td th:text="${symptome.nom}"></td>
+                <td class="text-end pe-5" th:text="${symptome.effet}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="mb-5 row">
+        <h4 class="text-secondary">Maladies possibles</h4>
+        <div class="table-responsive col-md-8">
+          <table class="table">
+            <thead class="table-secondary">
+              <tr>
+                <th>ID</th>
+                <th>Nom de la maladie</th>
+                <th class="text-end pe-5">Probabilité</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                th:each="maladie : ${maladies}"
+                th:if="${maladie.probabilite == 100}"
+                class="table-success"
+              >
+                <td th:text="${maladie.id}"></td>
+                <td th:text="${maladie.nom}"></td>
+                <td
+                  class="text-end pe-5"
+                  th:text="${maladie.probabilite + ' %'}"
+                ></td>
+              </tr>
+              <tr
+                th:each="maladie : ${maladies}"
+                th:unless="${maladie.probabilite == 100}"
+              >
+                <td th:text="${maladie.id}"></td>
+                <td th:text="${maladie.nom}"></td>
+                <td
+                  class="text-end pe-5"
+                  th:text="${maladie.probabilite + ' %'}"
+                ></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

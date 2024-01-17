@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Query;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Data
@@ -27,30 +28,37 @@ public class Maladie {
     @OneToMany(mappedBy = "maladie")
     private List<MaladieSymptome> maladiesSymptomes;
 
-    public static Maladie connaitreMaladie(EntityManager entityManager, ArrayList<Symptome> symptomes, int age) {
+    @Transient
+    private double probabilite;
+
+    public static ArrayList<Maladie> connaitreMaladie(EntityManager entityManager, ArrayList<Symptome> symptomes,
+            int age) {
+        ArrayList<Maladie> maladies = new ArrayList<Maladie>();
+
         Set<Maladie> maladiesPossibles = new HashSet<Maladie>();
         for (Symptome symptome : symptomes) {
             maladiesPossibles.addAll(symptome.getMaladiesPossibles(entityManager, age));
         }
 
         for (Maladie maladie : maladiesPossibles) {
-            if (symptomes.size() == maladie.getMaladiesSymptomes().size()) {
-                int nombreSymptomesEgaux = 0;
-                for (Symptome symptome : symptomes) {
-                    for (MaladieSymptome maladieSymptome : maladie.getMaladiesSymptomes()) {
-                        if (maladieSymptome.getSymptome().getId() == symptome.getId() && isBetween(symptome.getEffet(),
-                                maladieSymptome.getEffetMin(), maladieSymptome.getEffetMax())
-                                && isBetween(age, maladieSymptome.getAgeDebut(), maladieSymptome.getAgeFin())) {
-                            nombreSymptomesEgaux++;
-                        }
+            int nombreSymptomesEgaux = 0;
+            for (Symptome symptome : symptomes) {
+                for (MaladieSymptome maladieSymptome : maladie.getMaladiesSymptomes()) {
+                    if (maladieSymptome.getSymptome().getId() == symptome.getId() && isBetween(symptome.getEffet(),
+                            maladieSymptome.getEffetMin(), maladieSymptome.getEffetMax())
+                            && isBetween(age, maladieSymptome.getAgeDebut(), maladieSymptome.getAgeFin())) {
+                        nombreSymptomesEgaux++;
                     }
                 }
-                if (nombreSymptomesEgaux == maladie.getMaladiesSymptomes().size()) {
-                    return maladie;
-                }
             }
+            maladie.setProbabilite((double) (nombreSymptomesEgaux * 100) / maladie.getMaladiesSymptomes().size());
+            maladies.add(maladie);
         }
-        return null;
+
+        // Trier par probabitlite
+        maladies.sort((Maladie m1, Maladie m2) -> Double.compare(m2.getProbabilite(), m1.getProbabilite()));
+
+        return maladies;
     }
 
     public ArrayList<MedicamentQuantite> getMedicamentsMoinsCher(EntityManager entityManager, int age) {
