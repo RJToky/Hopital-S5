@@ -55,18 +55,10 @@ public class Maladie {
             maladies.add(maladie);
         }
 
-        // Trier par probabitlite
+        // Trier par probabilite
         maladies.sort((Maladie m1, Maladie m2) -> Double.compare(m2.getProbabilite(), m1.getProbabilite()));
 
         return maladies;
-    }
-
-    public ArrayList<MedicamentQuantite> getMedicamentsMoinsCher(EntityManager entityManager, int age) {
-        ArrayList<MedicamentQuantite> medicaments = new ArrayList<MedicamentQuantite>();
-        // for (MaladieSymptome maladieSymptome : this.getMaladiesSymptomes()) {
-        // medicaments.addAll(maladieSymptome.getMedicaments(entityManager));
-        // }
-        return medicaments;
     }
 
     public static boolean isBetween(int x, int min, int max) {

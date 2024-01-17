@@ -45,6 +45,21 @@ public class Symptome {
         return query.getResultList();
     }
 
+    public List<VMedicamentSymptome> getMedicamentsCorrespondants(EntityManager entityManager, int age) {
+        String sql = """
+                    select *
+                    from v_medicaments_symptomes
+                    where
+                        id_symptome = :id_symptome
+                        and :age between age_debut and age_fin
+                """;
+        Query query = entityManager.createNativeQuery(sql, VMedicamentSymptome.class);
+        query.setParameter("id_symptome", this.getId());
+        query.setParameter("age", age);
+
+        return query.getResultList();
+    }
+
     public static List<Symptome> getAll(EntityManager entityManager) {
         String sql = "select * from symptomes";
         Query query = entityManager.createNativeQuery(sql, Symptome.class);

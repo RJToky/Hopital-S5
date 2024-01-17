@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hopital.model.Maladie;
+import com.hopital.model.Medicament;
 import com.hopital.model.Symptome;
+import com.hopital.model.VMedicamentSymptome;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -49,6 +51,7 @@ public class HopitalController {
         modelAndView.addObject("symptomes", symptomes);
         modelAndView.addObject("maladies", Maladie.connaitreMaladie(entityManager,
                 symptomes, age));
+        modelAndView.addObject("medicaments", Medicament.connaitreMedicamentsMoinsCher(entityManager, symptomes, age));
         return modelAndView;
     }
 
@@ -66,8 +69,8 @@ public class HopitalController {
                 symptomes, age));
     }
 
-    @GetMapping("/maladies")
-    public ResponseEntity<?> maladies() {
-        return ResponseEntity.ok().body(Maladie.getAll(entityManager));
+    @GetMapping("/medicaments-symptomes")
+    public ResponseEntity<?> vMedicamentsSymptomes() {
+        return ResponseEntity.ok().body(VMedicamentSymptome.getAll(entityManager));
     }
 }

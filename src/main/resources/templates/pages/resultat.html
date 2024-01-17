@@ -70,6 +70,38 @@
           </table>
         </div>
       </div>
+
+      <div class="mb-5 row">
+        <h4 class="text-secondary">Medicaments</h4>
+        <div class="table-responsive col-12">
+          <table class="table">
+            <thead class="table-secondary">
+              <tr>
+                <th>ID</th>
+                <th>Symptome</th>
+                <th>ID</th>
+                <th>Medicament</th>
+                <th>Effet</th>
+                <th>Prix unitaire</th>
+                <th>Quantité</th>
+                <th>Prix total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="medicament : ${medicaments}">
+                <td th:text="${medicament.symptome.id}"></td>
+                <td th:text="${medicament.symptome.nom}"></td>
+                <td th:text="${medicament.id}"></td>
+                <td th:text="${medicament.nom}"></td>
+                <td th:text="${medicament.effet}"></td>
+                <td th:text="${medicament.prix + ' Ar'}"></td>
+                <td th:text="${medicament.quantite}"></td>
+                <td th:text="${medicament.prixTotal + ' Ar'}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </section>
   </body>
 </html>
