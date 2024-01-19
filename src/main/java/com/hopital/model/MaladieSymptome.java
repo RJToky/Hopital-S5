@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -25,7 +26,7 @@ public class MaladieSymptome {
     @JoinColumn(name = "id_maladie")
     private Maladie maladie;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "id_symptome")
     private Symptome symptome;
 

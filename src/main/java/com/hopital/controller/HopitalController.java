@@ -12,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.hopital.model.Maladie;
 import com.hopital.model.Medicament;
 import com.hopital.model.Symptome;
-import com.hopital.model.VMedicamentSymptome;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -33,7 +32,7 @@ public class HopitalController {
     @GetMapping("/resultat")
     public ModelAndView resultat(ModelAndView modelAndView,
             @RequestParam("age") int age, @RequestParam("id_symptome") String[] listIdSymptome,
-            @RequestParam("effet") String[] effets) {
+            @RequestParam("effet") String[] effets) throws Exception {
         ArrayList<Symptome> symptomes = new ArrayList<Symptome>();
         for (int i = 0; i < listIdSymptome.length; i++) {
             try {
@@ -41,7 +40,7 @@ public class HopitalController {
                 int effet = Integer.parseInt(effets[i]);
 
                 Symptome symptome = Symptome.getById(entityManager, idSymptome);
-                symptome.setEffet(Integer.parseInt(effets[i]));
+                symptome.setEffet(effet);
                 symptomes.add(symptome);
             } catch (Exception e) {
             }
@@ -69,8 +68,17 @@ public class HopitalController {
                 symptomes, age));
     }
 
-    @GetMapping("/medicaments-symptomes")
-    public ResponseEntity<?> vMedicamentsSymptomes() {
-        return ResponseEntity.ok().body(VMedicamentSymptome.getAll(entityManager));
+    @GetMapping("/connaitre-medicament")
+    public ResponseEntity<?> vMedicamentsSymptomes(@RequestParam("id_symptome") int[] listIdSymptome,
+            @RequestParam("effet") int[] effets, @RequestParam("age") int age) throws Exception {
+        ArrayList<Symptome> symptomes = new ArrayList<Symptome>();
+        for (int i = 0; i < listIdSymptome.length; i++) {
+            Symptome symptome = new Symptome();
+            symptome.setId(listIdSymptome[i]);
+            symptome.setEffet(effets[i]);
+            symptomes.add(symptome);
+        }
+        return ResponseEntity.ok().body(Medicament.connaitreMedicamentsMoinsCher(entityManager, symptomes, age));
     }
+
 }

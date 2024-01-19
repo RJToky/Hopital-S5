@@ -52,6 +52,7 @@ public class Symptome {
                     where
                         id_symptome = :id_symptome
                         and :age between age_debut and age_fin
+                        and effet > 0
                 """;
         Query query = entityManager.createNativeQuery(sql, VMedicamentSymptome.class);
         query.setParameter("id_symptome", this.getId());
@@ -70,7 +71,14 @@ public class Symptome {
         String sql = "select * from symptomes where id = :id";
         Query query = entityManager.createNativeQuery(sql, Symptome.class);
         query.setParameter("id", id);
-        return (Symptome) query.getSingleResult();
+        if (query.getResultList().size() == 0)
+            return null;
+        Symptome symptome = (Symptome) query.getSingleResult();
+        Symptome newSymptome = new Symptome();
+        newSymptome.setId(symptome.getId());
+        newSymptome.setNom(symptome.getNom());
+        newSymptome.setEffet(symptome.getEffet());
+        return newSymptome;
     }
 
 }
