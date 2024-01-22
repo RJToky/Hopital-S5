@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.hopital.model.Maladie;
 import com.hopital.model.Medicament;
 import com.hopital.model.Symptome;
+import com.hopital.model.VMedicamentSymptome;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -50,7 +51,25 @@ public class HopitalController {
         modelAndView.addObject("symptomes", symptomes);
         modelAndView.addObject("maladies", Maladie.connaitreMaladie(entityManager,
                 symptomes, age));
-        modelAndView.addObject("medicaments", Medicament.connaitreMedicamentsMoinsCher(entityManager, symptomes, age));
+
+        ArrayList<Symptome> symptomes2 = new ArrayList<Symptome>();
+        for (int i = 0; i < listIdSymptome.length; i++) {
+            int idSymptome = Integer.parseInt(listIdSymptome[i]);
+            int effet = 0;
+            try {
+                effet = Integer.parseInt(effets[i]);
+            } catch (Exception e) {
+            }
+            Symptome symptome = Symptome.getById(entityManager, idSymptome);
+            symptome.setEffet(effet);
+            symptomes2.add(symptome);
+        }
+
+        ArrayList<VMedicamentSymptome> medicamentsSymptomes = Medicament.connaitreMedicamentsMoinsCher(
+                entityManager,
+                symptomes2, age);
+        modelAndView.addObject("medicaments", medicamentsSymptomes);
+        modelAndView.addObject("prixTotalMedicament", Medicament.getPrixTotal(medicamentsSymptomes));
         return modelAndView;
     }
 

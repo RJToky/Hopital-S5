@@ -78,6 +78,7 @@ public class Symptome {
         newSymptome.setId(symptome.getId());
         newSymptome.setNom(symptome.getNom());
         newSymptome.setEffet(symptome.getEffet());
+
         return newSymptome;
     }
 

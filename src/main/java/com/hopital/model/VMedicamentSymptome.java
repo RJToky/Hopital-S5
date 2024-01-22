@@ -83,4 +83,56 @@ public class VMedicamentSymptome {
 
         return (VMedicamentSymptome) query.getResultList().get(0);
     }
+
+    public static VMedicamentSymptome getByIdSymptome(EntityManager entityManager, int idMedicament, int idSymptome) {
+        String sql = """
+                select *
+                from v_medicaments_symptomes
+                where
+                    id_medicament = :id_medicament
+                    and id_symptome = :id_symptome
+                    and effet > 0
+                """;
+        Query query = entityManager.createNativeQuery(sql,
+                VMedicamentSymptome.class);
+
+        query.setParameter("id_medicament", idMedicament);
+        query.setParameter("id_symptome", idSymptome);
+        if (query.getResultList().size() == 0)
+            return null;
+
+        return (VMedicamentSymptome) query.getResultList().get(0);
+    }
+
+    public static List<VMedicamentSymptome> getMedicamentsByAge(EntityManager entityManager, int age) {
+        String sql = """
+                    select *
+                    from v_medicaments_symptomes
+                    where
+                        :age between age_debut and age_fin
+                        and effet > 0
+                """;
+        Query query = entityManager.createNativeQuery(sql, VMedicamentSymptome.class);
+        query.setParameter("age", age);
+
+        return query.getResultList();
+    }
+
+    public static VMedicamentSymptome getByName(EntityManager entityManager, String nom) {
+        String sql = """
+                select *
+                from v_medicaments_symptomes
+                where
+                    nom ilike :nom
+                    and effet > 0
+                """;
+        Query query = entityManager.createNativeQuery(sql,
+                VMedicamentSymptome.class);
+
+        query.setParameter("nom", nom);
+        if (query.getResultList().size() == 0)
+            return null;
+
+        return (VMedicamentSymptome) query.getResultList().get(0);
+    }
 }
